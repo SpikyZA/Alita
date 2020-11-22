@@ -22,19 +22,25 @@ module.exports = {
     try{
 
       if(!args[0]){
-        let content = `${message.guild.name}'s prefix is:`+ "`" + data.guild.prefix + "`" +`\n\nTo set up a new prefix use ` + "`" + data.guild.prefix + "setprefix [prefix]`"
+        let content = `${message.guild.name}'s logChannel is:`+ "<#" + data.guild.prefix + ">" +`\n\nTo set up a new reportchannel use ` + "`" + data.guild.prefix + "setlog #channel`"
         return message.channel.send(content)
       }
 
-      if(args[0].length > 5){
-        let content = `Unable to assign prefix, make sure the prefix length is less than \`5 characters!\`\n\`\`\`${data.guild.prefix}setprefix [prefix]\`\`\``
-        return message.channel.send(content)
-      }
+//       if(args[0].length > 5){
+//         let content = `Unable to assign prefix, make sure the prefix length is less than \`5 characters!\`\n\`\`\`${data.guild.prefix}setprefix [prefix]\`\`\``
+//         return message.channel.send(content)
+//       }
+      
+      let channel = message.mentions.channels.first().id;
+      
+      if(!channel) {
+        let content = "You did not specify/mention a log channel! Please mention a channel";
+        return message.channel.send(content);
 
-      data.guild.prefix = args[0];
+      data.guild.logChannel = channel;
       await data.guild.save();
 
-      let content = `Prefix has been successfully updated to ` + "`" + args[0] + "`"
+      let content = `Prefix has been successfully updated to <#${data.guild.logChannel}>`;
       return message.channel.send(content)
 
     } catch (err){
